@@ -12,11 +12,6 @@
 * that allocates lists of memory blocks.
 */
 
-typedef unsigned short ushort;
-typedef unsigned int uint;
-//typedef unsigned long long ulong;
-
-
 template<typename T, int LEN = 1024>
 struct Pool
 {
@@ -31,14 +26,15 @@ struct Pool
 		public:
 
 		Chunk *chunk;
-		uint pos;
+		unsigned pos;
 
 		public:
 
 		iterator()
 		{}
 	
-		iterator(Chunk* chunk, uint pos) : chunk(chunk), pos(pos)
+		iterator(Chunk* chunk, unsigned pos)
+			: chunk(chunk), pos(pos)
 		{}
 
 		~iterator()
@@ -48,7 +44,7 @@ struct Pool
 		inline iterator& operator++()
 		{
 			++pos;
-			if(pos == LEN && chunk->next)
+			if (pos == LEN && chunk->next)
 			{
 				pos = 0;
 				chunk = chunk->next;
@@ -57,7 +53,8 @@ struct Pool
 		}
 
 		inline iterator operator++(int) {
-			iterator tmp(*this); operator++();
+			iterator tmp(*this);
+			operator++();
 			return tmp;
 		}
 
@@ -78,10 +75,6 @@ struct Pool
 		}
 	};
 	
-	Chunk* beg_m;
-	Chunk* end_m;
-	uint pos_m;
-	
 	Pool() : pos_m(0) {
 		init_resources();
 	}
@@ -95,8 +88,8 @@ struct Pool
 		init_resources();
 	}
 	
-	uint countElements() {
-		uint count = 0;
+	unsigned countElements() {
+		unsigned count = 0;
 		Chunk* cur = beg_m;
 		while(cur != end_m) {
 			cur = cur->next;
@@ -113,34 +106,12 @@ struct Pool
 	iterator end() {
 		return iterator(end_m, pos_m);
 	}
-	
-	/*
-	static T* getElement(uint i) inline {
-		return getElement(beg_m, i);
-	}
-	
-	//Get the i-th element starting from chunk offset
-	static T* getElement(Chunk* offset, uint i) {
-		int chunk_n = (i / LEN);
-		const int chunk_i = (i - chunk_n);
 
-		while(chunk_n)
-		{
-			offset = offset->next;
-			assert(offset != NULL);
-			--chunk_n;
-		}
-		
-		return &offset->chunk[chunk_i];
-	}
-	*/
-	
 	void* alloc_item() {
 		assert(pos_m <= LEN);
-		
-		if(pos_m == LEN) {
+
+		if (pos_m == LEN) {
 			Chunk* chunk = (Chunk*) malloc(sizeof(Chunk));
-			//  posix_memalign((void**) &chunk, 8u, sizeof(Chunk));
 			assert(chunk != NULL);
 			
 			chunk->next = NULL;
@@ -154,15 +125,15 @@ struct Pool
 		
 		return mem;
 	}
-	
-	private:
-	
+
+private:
+
 	void init_resources() {
 		beg_m = (Chunk*) malloc(sizeof(Chunk));
 		beg_m->next = NULL;
 		end_m = beg_m;
 	}
-	
+
 	//free all resources
 	void free_resources() {
 		Chunk* cur = beg_m;
@@ -173,6 +144,10 @@ struct Pool
 			cur = tmp;
 		}
 	}
+
+	Chunk* beg_m;
+	Chunk* end_m;
+	unsigned pos_m;
 };
 
 #endif

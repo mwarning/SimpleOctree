@@ -1,14 +1,17 @@
 
-export CC = gcc
-export CFLAGS = -O3
+CC = gcc
+CFLAGS = -O3
+LFLAGS = -lSDL -lGL -lc -lstdc++ -lm
 
-.PHONY: main clean install
+.PHONY: main clean
 
-main:
-	g++ -O3 -msse2 main.cpp Octree.cpp Pool.cpp Timer.cpp -o main
+OBJS = build/main.o build/Octree.o build/Pool.o build/Timer.o
+
+build/%.o : src/%.cpp src/%.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+main: clean $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o main
 
 clean:
-	rm -f *.o main
-
-install:
-	strip main
+	rm -f build/*.o main
