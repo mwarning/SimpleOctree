@@ -5,7 +5,7 @@ LFLAGS = -lSDL -lGL -lc -lstdc++ -lm
 
 .PHONY: main clean
 
-OBJS = build/main.o build/Octree.o build/Pool.o build/Timer.o
+OBJS = build/main.o build/Octree.o build/Pool.o
 
 build/%.o : src/%.cpp src/%.h
 	$(CC) $(CFLAGS) -c -o $@ $<
