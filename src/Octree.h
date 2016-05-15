@@ -53,16 +53,15 @@ public:
 
 	class Node {};
 
-	//Branch must have at least one child.
+	// Branch must have at least one child.
 	class Branch : public Node
 	{
 		Node *children[8];
 
 		public:
 
-		Branch()
+		Branch() : children()
 		{
-			memset(children, 0, sizeof(children));
 		}
 
 		void *operator new(size_t num_bytes, Pool<Branch> *mem) {
@@ -314,14 +313,14 @@ private:
 		const int pos_y;
 		const int pos_z;
 
-		//search box volume
+		// Search box volume.
 		int x_min, x_max;
 		int y_min, y_max;
 		int z_min, z_max;
 
-		//nearest neighbour
+		// Nearest neighbour.
 		Leaf* nn_leaf;
-		unsigned long nn_sq_distance;
+		unsigned nn_sq_distance;
 		unsigned nn_x;
 		unsigned nn_y;
 		unsigned nn_z;
@@ -335,14 +334,12 @@ private:
 			nn_x(0), nn_y(0), nn_z(0) {
 		}
 
-		//check_leaf if the leaf at position x/y/z is nearer then the current leaf
+		// Check if the leaf at position x/y/z is nearer then the current leaf
 		void check_leaf(Leaf* leaf, int x, int y, int z) {
 			const long dx = pos_x - x;
 			const long dy = pos_y - y;
 			const long dz = pos_z - z;
 			const unsigned sq_distance = (dx * dx) + (dy * dy) + (dz * dz);
-
-			//++lc;
 
 			if (sq_distance < nn_sq_distance)
 			{
@@ -352,7 +349,7 @@ private:
 				nn_y = y;
 				nn_z = z;
 
-				const int r = std::sqrt(sq_distance) + 1.0; //<=> ceil(distance)
+				const int r = std::sqrt(sq_distance) + 1.0;
 
 				x_min = pos_x - r;
 				x_max = pos_x + r;
@@ -363,7 +360,7 @@ private:
 			}
 		}
 
-		//check if any point of the position is in the search box
+		// Check if any point of the position is in the search box.
 		bool check_branch(const unsigned x, const unsigned int y, const unsigned int z, const unsigned w) const {
 			return !(x_max < x || x_min > x+w || y_max < y || y_min > y+w || z_max < z || z_min > z+w);
 		}
@@ -372,11 +369,12 @@ private:
 			assert(b != nullptr);
 			assert(isPow2(size));
 
-			//try the path to the destined postion first
+			// Try the path to the destined position first
 			const unsigned start_i = !!(pos_x & size) * 1 + !!(pos_y & size) * 2 + !!(pos_z & size) * 4;
 
 			for (unsigned i = start_i; i < (start_i + 8); ++i) {
-				Node* n = b->children[i & 7]; //limit index to range [0-7]
+				// Limit index to range [0-7].
+				Node* n = b->children[i & 7]; 
 
 				if (n == nullptr) {
 					continue;
@@ -386,12 +384,9 @@ private:
 				const unsigned child_y = set1_if_bit2(y, i, size);
 				const unsigned child_z = set1_if_bit3(z, i, size);
 
-				if (size == 1) //child
-				{
+				if (size == 1) {
 					check_leaf(reinterpret_cast<Leaf*>(n), child_x, child_y, child_z);
-				}
-				else if (check_branch(child_x, child_y, child_z, size))
-				{
+				} else if (check_branch(child_x, child_y, child_z, size)) {
 					search(reinterpret_cast<Branch*>(n), child_x, child_y, child_z, (size / 2));
 				}
 			}
