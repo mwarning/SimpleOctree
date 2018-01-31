@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <cmath> //for sqrt
 
-#include "Pool.h"
+#include "Pool.hpp"
 
 /*
 * This is an Octree implementation for quick point

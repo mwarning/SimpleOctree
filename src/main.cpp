@@ -1,7 +1,7 @@
 
 #include <cstdlib>
 
-#include "Octree.h"
+#include "Octree.hpp"
 
 
 void showNearestNeighbour(Octree<unsigned> &octree, unsigned x, unsigned y, unsigned z)

@@ -7,7 +7,7 @@ LFLAGS = -lSDL -lGL -lc -lstdc++ -lm
 
 OBJS = build/main.o build/Octree.o build/Pool.o
 
-build/%.o : src/%.cpp src/%.h
+build/%.o : src/%.cpp src/%.hpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 main: clean $(OBJS)
