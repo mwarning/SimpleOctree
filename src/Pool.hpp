@@ -41,8 +41,7 @@ struct Pool
 		{}
 
 		inline iterator(const iterator& it) : chunk(it.chunk), pos(it.pos) {}
-		inline iterator& operator++()
-		{
+		inline iterator& operator++() {
 			++pos;
 			if (pos == LEN && chunk->next) {
 				pos = 0;

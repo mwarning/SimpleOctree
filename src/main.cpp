@@ -29,7 +29,7 @@ void test1() {
 	//std::cout << "Branches: " << octree.countBranches() << std::endl;
 	//std::cout << "Leaves: " << octree.countLeaves() << std::endl;
 
-	// find leaf nearest to [444, 23, 1333]
+	// Find leaf nearest to [444, 23, 1333]
 	const unsigned find_x = 444;
 	const unsigned find_y = 23;
 	const unsigned find_z = 1333;
@@ -48,6 +48,7 @@ void test1() {
 
 void test2() {
 	Octree<unsigned> octree(8);
+
 	octree.insert(0, 2, 3, 23);
 	octree.insert(0, 4, 5, 42);
 
