@@ -28,8 +28,7 @@ inline unsigned log2(unsigned n) {
 	assert(isPow2(n));
 
 	unsigned log = 0;
-	while(true)
-	{
+	while(true) {
 		n >>= 1;
 		if (n == 0) {
 			break;
@@ -54,14 +53,11 @@ public:
 	class Node {};
 
 	// Branch must have at least one child.
-	class Branch : public Node
+	struct Branch : public Node
 	{
 		Node *children[8];
 
-		public:
-
-		Branch() : children()
-		{
+		Branch() : children() {
 		}
 
 		void *operator new(size_t num_bytes, Pool<Branch> *mem) {
@@ -73,15 +69,11 @@ public:
 			assert(i < 8);
 			return children[i];
 		}
-
-		friend class Octree<T>;
 	};
 
-	class Leaf : public Node
+	struct Leaf : public Node
 	{
 		T m_value;
-
-		public:
 
 		Leaf(T value) : m_value(value) {
 		}
@@ -98,8 +90,6 @@ public:
 		void value(T& v) {
 			m_value = v;
 		}
-
-		friend class Octree<T>;
 	};
 
 
@@ -178,14 +168,11 @@ public:
 		unsigned depth = m_depth;
 
 		while (depth) {
-			if(*n == nullptr)
-			{
+			if (*n == nullptr) {
 				*n = new(&branch_pool) Branch();
 				++branch_count;
 				parent = n;
-			}
-			else
-			{
+			} else {
 				--depth;
 				parent = n;
 
@@ -200,8 +187,7 @@ public:
 			}
 		}
 
-		if(*n == nullptr)
-		{
+		if (*n == nullptr) {
 			assert(depth == 0);
 			*n = new(&leaf_pool) Leaf(value);
 			++leaf_count;

@@ -30,12 +30,12 @@ struct Pool
 
 		public:
 
-		iterator()
-		{}
+		iterator() {
+		}
 	
 		iterator(Chunk* chunk, unsigned pos)
-			: chunk(chunk), pos(pos)
-		{}
+			: chunk(chunk), pos(pos) {
+		}
 
 		~iterator()
 		{}
@@ -44,8 +44,7 @@ struct Pool
 		inline iterator& operator++()
 		{
 			++pos;
-			if (pos == LEN && chunk->next)
-			{
+			if (pos == LEN && chunk->next) {
 				pos = 0;
 				chunk = chunk->next;
 			}
